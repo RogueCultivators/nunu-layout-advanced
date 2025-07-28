@@ -3,7 +3,6 @@ package jwt
 import (
 	"errors"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
-	"regexp"
 	"strings"
 	"time"
 

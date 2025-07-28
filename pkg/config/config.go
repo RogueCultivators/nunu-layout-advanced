@@ -41,6 +41,7 @@ type Log struct {
 	MaxBackups int
 	Compress   bool
 	Encoding   string
+	Mode       string
 }
 
 type Config struct {

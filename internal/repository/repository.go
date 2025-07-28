@@ -7,11 +7,13 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/zapgorm2"
 	"github.com/redis/go-redis/v9"
+	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"moul.io/zapgorm2"
 	"time"
 )
 
@@ -72,14 +74,18 @@ func NewDB(conf *config.Config, l *log.Logger) *gorm.DB {
 		err error
 	)
 	logger := zapgorm2.New(l.Logger)
-	logger.SetAsDefault()
 	switch conf.Data.Db.Type {
 	case "postgres":
-		db, err = gorm.Open(postgres.Open(conf.Data.Db.Dsn), &gorm.Config{})
+		db, err = gorm.Open(postgres.Open(conf.Data.Db.Dsn), &gorm.Config{
+			Logger: logger,
+		})
 	case "mysql":
-		db, err = gorm.Open(mysql.Open(conf.Data.Db.Dsn), &gorm.Config{})
+		db, err = gorm.Open(mysql.Open(conf.Data.Db.Dsn), &gorm.Config{
+			Logger: logger,
+		})
 	case "sqlite":
-		db, err = gorm.Open(sqlite.Open(conf.Data.Db.Dsn), &gorm.Config{})
+		db, err = gorm.Open(sqlite.Open(conf.Data.Db.Dsn), &gorm.Config{
+			Logger: logger})
 	default:
 		panic(fmt.Sprintf("%s error: 数据库类型不支持", conf.Data.Db.Type))
 	}

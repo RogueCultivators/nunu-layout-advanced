@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/md5"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"net/http"
 	"sort"

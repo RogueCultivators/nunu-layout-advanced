@@ -20,7 +20,7 @@ func NewHTTPServer(
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
 ) *http.Server {
-	if conf.GetString("env") == "prod" {
+	if conf.Env == "prod" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	s := http.NewServer(
