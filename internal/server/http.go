@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	apiV1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/docs"
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
@@ -31,8 +30,8 @@ func NewHTTPServer(
 	)
 
 	// swagger doc
-	docs.SwaggerInfo.BasePath = "/v1"
-	s.GET("/swagger/*any", ginSwagger.WrapHandler(
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	s.GET("/api/docs/*any", ginSwagger.WrapHandler(
 		swaggerfiles.Handler,
 		//ginSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", conf.GetInt("app.http.port"))),
 		ginSwagger.DefaultModelsExpandDepth(-1),
@@ -45,14 +44,8 @@ func NewHTTPServer(
 		middleware.RequestLogMiddleware(logger),
 		//middleware.SignMiddleware(log),
 	)
-	s.GET("/", func(ctx *gin.Context) {
-		logger.WithContext(ctx).Info("hello")
-		apiV1.HandleSuccess(ctx, map[string]interface{}{
-			":)": "Thank you for using nunu!",
-		})
-	})
 
-	v1 := s.Group("/v1")
+	v1 := s.Group("/api/v1")
 	{
 		// No route group has permission
 		noAuthRouter := v1.Group("/")

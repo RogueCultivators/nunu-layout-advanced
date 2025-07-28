@@ -10,28 +10,27 @@ type Response struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
+	Total   int64       `json:"total"`
 }
 
-func HandleSuccess(ctx *gin.Context, data interface{}) {
-	if data == nil {
-		data = map[string]interface{}{}
-	}
-	resp := Response{Code: errorCodeMap[ErrSuccess], Message: ErrSuccess.Error(), Data: data}
+func HandleSuccess(ctx *gin.Context, data interface{}, total int64) {
+	//if data == nil {
+	//	data = map[string]interface{}{}
+	//}
+	resp := Response{Code: errorCodeMap[ErrSuccess], Message: ErrSuccess.Error(), Data: data, Total: total}
 	if _, ok := errorCodeMap[ErrSuccess]; !ok {
-		resp = Response{Code: 0, Message: "", Data: data}
+		resp = Response{Code: 0, Message: "", Data: data, Total: total}
 	}
 	ctx.JSON(http.StatusOK, resp)
 }
 
-func HandleError(ctx *gin.Context, httpCode int, err error, data interface{}) {
-	if data == nil {
-		data = map[string]string{}
-	}
-	resp := Response{Code: errorCodeMap[err], Message: err.Error(), Data: data}
+func HandleError(ctx *gin.Context, err error) {
+
+	resp := Response{Code: errorCodeMap[err], Message: err.Error(), Data: nil}
 	if _, ok := errorCodeMap[err]; !ok {
-		resp = Response{Code: 500, Message: "unknown error", Data: data}
+		resp = Response{Code: 500, Message: "unknown error", Data: nil}
 	}
-	ctx.JSON(httpCode, resp)
+	ctx.JSON(http.StatusOK, resp)
 }
 
 type Error struct {

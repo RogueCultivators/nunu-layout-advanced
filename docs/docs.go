@@ -167,6 +167,9 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -210,6 +213,9 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -247,6 +253,9 @@ const docTemplate = `{
                 "data": {},
                 "message": {
                     "type": "string"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

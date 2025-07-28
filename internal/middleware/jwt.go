@@ -6,7 +6,6 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"go.uber.org/zap"
-	"net/http"
 )
 
 func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
@@ -17,7 +16,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
-			v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
+			v1.HandleError(ctx, v1.ErrUnauthorized)
 			ctx.Abort()
 			return
 		}
@@ -28,7 +27,7 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}), zap.Error(err))
-			v1.HandleError(ctx, http.StatusUnauthorized, v1.ErrUnauthorized, nil)
+			v1.HandleError(ctx, v1.ErrUnauthorized)
 			ctx.Abort()
 			return
 		}

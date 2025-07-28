@@ -3,6 +3,7 @@ init:
 	go install github.com/google/wire/cmd/wire@latest
 	go install github.com/golang/mock/mockgen@latest
 	go install github.com/swaggo/swag/cmd/swag@latest
+	go install github.com/go-nunu/nunu@latest
 
 .PHONY: bootstrap
 bootstrap:
@@ -23,6 +24,7 @@ test:
 
 .PHONY: build
 build:
+	swag init  -g cmd/server/main.go -o ./docs --parseDependency
 	go build -ldflags="-s -w" -o ./bin/server ./cmd/server
 
 .PHONY: docker
@@ -33,3 +35,5 @@ docker:
 .PHONY: swag
 swag:
 	swag init  -g cmd/server/main.go -o ./docs
+add:
+	nunu create -t ./tpl $(runargs)

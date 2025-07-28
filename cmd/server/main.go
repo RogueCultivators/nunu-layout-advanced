@@ -38,7 +38,7 @@ func main() {
 		panic(err)
 	}
 	logger.Info("server start", zap.String("host", fmt.Sprintf("http://%s:%d", conf.Http.Host, conf.Http.Port)))
-	logger.Info("docs addr", zap.String("addr", fmt.Sprintf("http://%s:%d/swagger/index.html", conf.Http.Host, conf.Http.Port)))
+	logger.Info("docs addr", zap.String("addr", fmt.Sprintf("http://%s:%d/api/docs/index.html", conf.Http.Host, conf.Http.Port)))
 	if err = app.Run(context.Background()); err != nil {
 		panic(err)
 	}

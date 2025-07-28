@@ -6,7 +6,6 @@ import (
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
-	"net/http"
 	"sort"
 	"strings"
 )
@@ -18,7 +17,7 @@ func SignMiddleware(logger *log.Logger, conf *config.Config) gin.HandlerFunc {
 		for _, header := range requiredHeaders {
 			value, ok := ctx.Request.Header[header]
 			if !ok || len(value) == 0 {
-				v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+				v1.HandleError(ctx, v1.ErrBadRequest)
 				ctx.Abort()
 				return
 			}
@@ -44,7 +43,7 @@ func SignMiddleware(logger *log.Logger, conf *config.Config) gin.HandlerFunc {
 		str += conf.Security.ApiSign.AppSecret
 
 		if ctx.Request.Header.Get("Sign") != strings.ToUpper(cryptor.Md5String(str)) {
-			v1.HandleError(ctx, http.StatusBadRequest, v1.ErrBadRequest, nil)
+			v1.HandleError(ctx, v1.ErrBadRequest)
 			ctx.Abort()
 			return
 		}

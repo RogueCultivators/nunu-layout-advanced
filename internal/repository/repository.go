@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/go-nunu/nunu-layout-advanced/internal/model"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/zapgorm2"
@@ -33,6 +34,8 @@ func NewRepository(
 	//
 	//	mongo *mongo.Client,
 ) *Repository {
+
+	model.Init(db, logger)
 	return &Repository{
 		db: db,
 		//rdb:    rdb,
