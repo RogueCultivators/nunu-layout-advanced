@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"bytes"
+	"github.com/duke-git/lancet/v2/cryptor"
+	"github.com/duke-git/lancet/v2/random"
 	"github.com/gin-gonic/gin"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/md5"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/helper/uuid"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"go.uber.org/zap"
 	"io"
@@ -14,7 +14,11 @@ import (
 func RequestLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// The configuration is initialized once per request
-		trace := md5.Md5(uuid.GenUUID())
+		uuid, err := random.UUIdV4()
+		if err != nil {
+			return
+		}
+		trace := cryptor.Md5String(uuid)
 		logger.WithValue(ctx, zap.String("trace", trace))
 		logger.WithValue(ctx, zap.String("request_method", ctx.Request.Method))
 		logger.WithValue(ctx, zap.Any("request_headers", ctx.Request.Header))
@@ -35,7 +39,6 @@ func ResponseLogMiddleware(logger *log.Logger) gin.HandlerFunc {
 		startTime := time.Now()
 		ctx.Next()
 		duration := time.Since(startTime).String()
-		ctx.Header("X-Response-Time", duration)
 		logger.WithContext(ctx).Info("Response", zap.Any("response_body", blw.body.String()), zap.Any("time", duration))
 	}
 }

@@ -43,7 +43,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.LoginRequest"
+                            "$ref": "#/definitions/v1.LoginRequest"
                         }
                     }
                 ],
@@ -51,7 +51,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponse"
+                            "$ref": "#/definitions/v1.LoginResponse"
                         }
                     }
                 }
@@ -77,7 +77,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.RegisterRequest"
+                            "$ref": "#/definitions/v1.RegisterRequest"
                         }
                     }
                 ],
@@ -85,7 +85,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.Response"
+                            "$ref": "#/definitions/v1.Response"
                         }
                     }
                 }
@@ -112,7 +112,43 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponse"
+                            "$ref": "#/definitions/v1.GetProfileResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "修改用户信息",
+                "parameters": [
+                    {
+                        "description": "params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.UpdateProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.Response"
                         }
                     }
                 }
@@ -120,21 +156,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponse": {
+        "v1.GetProfileResponse": {
             "type": "object",
             "properties": {
                 "code": {
                     "type": "integer"
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponseData"
+                    "$ref": "#/definitions/v1.GetProfileResponseData"
                 },
                 "message": {
                     "type": "string"
                 }
             }
         },
-        "github_com_go-nunu_nunu-layout-advanced_api_v1.GetProfileResponseData": {
+        "v1.GetProfileResponseData": {
             "type": "object",
             "properties": {
                 "nickname": {
@@ -146,7 +182,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_go-nunu_nunu-layout-advanced_api_v1.LoginRequest": {
+        "v1.LoginRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -163,21 +199,21 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponse": {
+        "v1.LoginResponse": {
             "type": "object",
             "properties": {
                 "code": {
                     "type": "integer"
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponseData"
+                    "$ref": "#/definitions/v1.LoginResponseData"
                 },
                 "message": {
                     "type": "string"
                 }
             }
         },
-        "github_com_go-nunu_nunu-layout-advanced_api_v1.LoginResponseData": {
+        "v1.LoginResponseData": {
             "type": "object",
             "properties": {
                 "accessToken": {
@@ -185,7 +221,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_go-nunu_nunu-layout-advanced_api_v1.RegisterRequest": {
+        "v1.RegisterRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -202,7 +238,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_go-nunu_nunu-layout-advanced_api_v1.Response": {
+        "v1.Response": {
             "type": "object",
             "properties": {
                 "code": {
@@ -211,6 +247,22 @@ const docTemplate = `{
                 "data": {},
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.UpdateProfileRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "1234@gmail.com"
+                },
+                "nickname": {
+                    "type": "string",
+                    "example": "alan"
                 }
             }
         }

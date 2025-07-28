@@ -20,7 +20,9 @@ func NewHTTPServer(
 	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
 ) *http.Server {
-	gin.SetMode(gin.DebugMode)
+	if conf.GetString("env") == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	s := http.NewServer(
 		gin.Default(),
 		logger,
@@ -34,6 +36,7 @@ func NewHTTPServer(
 		swaggerfiles.Handler,
 		//ginSwagger.URL(fmt.Sprintf("http://localhost:%d/swagger/doc.json", conf.GetInt("app.http.port"))),
 		ginSwagger.DefaultModelsExpandDepth(-1),
+		ginSwagger.PersistAuthorization(true),
 	))
 
 	s.Use(

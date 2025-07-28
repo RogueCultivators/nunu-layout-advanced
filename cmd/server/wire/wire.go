@@ -5,6 +5,7 @@ package wire
 
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
+	"github.com/go-nunu/nunu-layout-advanced/internal/job"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
@@ -14,12 +15,14 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/server/http"
+	"github.com/go-nunu/nunu-layout-advanced/pkg/sid"
 	"github.com/google/wire"
 )
 
 var repositorySet = wire.NewSet(
 	repository.NewDB,
-	repository.NewRedis,
+	//repository.NewRedis,
+	//repository.NewMongo,
 	repository.NewRepository,
 	repository.NewTransaction,
 	repository.NewUserRepository,
@@ -35,16 +38,23 @@ var handlerSet = wire.NewSet(
 	handler.NewUserHandler,
 )
 
+var jobSet = wire.NewSet(
+	job.NewJob,
+	job.NewUserJob,
+)
 var serverSet = wire.NewSet(
 	server.NewHTTPServer,
-	server.NewJob,
-	server.NewTask,
+	server.NewJobServer,
 )
 
 // build App
-func newApp(httpServer *http.Server, job *server.Job) *app.App {
+func newApp(
+	httpServer *http.Server,
+	jobServer *server.JobServer,
+	// task *server.Task,
+) *app.App {
 	return app.NewApp(
-		app.WithServer(httpServer, job),
+		app.WithServer(httpServer, jobServer),
 		app.WithName("demo-server"),
 	)
 }
@@ -55,6 +65,7 @@ func NewWire(*config.Config, *log.Logger) (*app.App, func(), error) {
 		repositorySet,
 		serviceSet,
 		handlerSet,
+		jobSet,
 		serverSet,
 		sid.NewSid,
 		jwt.NewJwt,

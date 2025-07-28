@@ -79,6 +79,21 @@ func NewLog(conf *config.Config) *Logger {
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(&hook)), // Print to console and file
 		level,
 	)
+	mode := conf.Log.Mode
+	switch mode {
+	case "console":
+		core = zapcore.NewCore(
+			encoder,
+			zapcore.AddSync(os.Stdout),
+			level,
+		)
+	case "file":
+		core = zapcore.NewCore(
+			encoder,
+			zapcore.AddSync(&hook),
+			level,
+		)
+	}
 	if conf.Env != "prod" {
 		return &Logger{zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))}
 	}

@@ -14,15 +14,20 @@ import (
 
 var repositorySet = wire.NewSet(
 	repository.NewDB,
-	repository.NewRedis,
+	//repository.NewRedis,
 	repository.NewRepository,
 	repository.NewUserRepository,
 )
+var serverSet = wire.NewSet(
+	server.NewMigrateServer,
+)
 
 // build App
-func newApp(migrate *server.Migrate) *app.App {
+func newApp(
+	migrateServer *server.MigrateServer,
+) *app.App {
 	return app.NewApp(
-		app.WithServer(migrate),
+		app.WithServer(migrateServer),
 		app.WithName("demo-migrate"),
 	)
 }
@@ -30,7 +35,7 @@ func newApp(migrate *server.Migrate) *app.App {
 func NewWire(*config.Config, *log.Logger) (*app.App, func(), error) {
 	panic(wire.Build(
 		repositorySet,
-		server.NewMigrate,
+		serverSet,
 		newApp,
 	))
 }

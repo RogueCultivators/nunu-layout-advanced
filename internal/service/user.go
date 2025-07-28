@@ -16,7 +16,10 @@ type UserService interface {
 	UpdateProfile(ctx context.Context, userId string, req *v1.UpdateProfileRequest) error
 }
 
-func NewUserService(service *Service, userRepo repository.UserRepository) UserService {
+func NewUserService(
+	service *Service,
+	userRepo repository.UserRepository,
+) UserService {
 	return &userService{
 		userRepo: userRepo,
 		Service:  service,
@@ -30,7 +33,11 @@ type userService struct {
 
 func (s *userService) Register(ctx context.Context, req *v1.RegisterRequest) error {
 	// check username
-	if user, err := s.userRepo.GetByEmail(ctx, req.Email); err == nil && user != nil {
+	user, err := s.userRepo.GetByEmail(ctx, req.Email)
+	if err != nil {
+		return v1.ErrInternalServerError
+	}
+	if err == nil && user != nil {
 		return v1.ErrEmailAlreadyUse
 	}
 
@@ -43,7 +50,7 @@ func (s *userService) Register(ctx context.Context, req *v1.RegisterRequest) err
 	if err != nil {
 		return err
 	}
-	user := &model.User{
+	user = &model.User{
 		UserId:   userId,
 		Email:    req.Email,
 		Password: string(hashedPassword),
