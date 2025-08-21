@@ -1,4 +1,4 @@
-storage/logs
+storage/*
 .idea
 *.log
 deploy/docker-compose/conf
