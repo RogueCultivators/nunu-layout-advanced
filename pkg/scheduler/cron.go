@@ -1,10 +1,11 @@
 package scheduler
 
 import (
+	"time"
+
 	"github.com/go-co-op/gocron"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"go.uber.org/zap"
-	"time"
 )
 
 type Scheduler struct {

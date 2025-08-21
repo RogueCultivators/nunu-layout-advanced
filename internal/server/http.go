@@ -6,7 +6,6 @@ import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/jwt"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/server/http"
 	swaggerfiles "github.com/swaggo/files"
@@ -16,8 +15,8 @@ import (
 func NewHTTPServer(
 	logger *log.Logger,
 	conf *config.Config,
-	jwt *jwt.JWT,
 	userHandler *handler.UserHandler,
+	am *middleware.AuthMiddleware,
 ) *http.Server {
 	if conf.Env == "prod" {
 		gin.SetMode(gin.ReleaseMode)
@@ -54,13 +53,13 @@ func NewHTTPServer(
 			noAuthRouter.POST("/login", userHandler.Login)
 		}
 		// Non-strict permission routing group
-		noStrictAuthRouter := v1.Group("/").Use(middleware.NoStrictAuth(jwt, logger))
+		noStrictAuthRouter := v1.Group("/").Use(am.NoStrictAuth())
 		{
 			noStrictAuthRouter.GET("/user", userHandler.GetProfile)
 		}
 
 		// Strict permission routing group
-		strictAuthRouter := v1.Group("/").Use(middleware.StrictAuth(jwt, logger))
+		strictAuthRouter := v1.Group("/").Use(am.StrictAuth())
 		{
 			strictAuthRouter.PUT("/user", userHandler.UpdateProfile)
 		}

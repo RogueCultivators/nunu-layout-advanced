@@ -8,11 +8,23 @@ import (
 	"go.uber.org/zap"
 )
 
-func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
+type AuthMiddleware struct {
+	j      *jwt.JWT
+	logger *log.Logger
+}
+
+func NewAuthMiddleware(j *jwt.JWT, logger *log.Logger) *AuthMiddleware {
+	return &AuthMiddleware{
+		j:      j,
+		logger: logger,
+	}
+}
+
+func (am *AuthMiddleware) StrictAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
-			logger.WithContext(ctx).Warn("No token", zap.Any("data", map[string]interface{}{
+			am.logger.WithContext(ctx).Warn("No token", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}))
@@ -21,9 +33,9 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 			return
 		}
 
-		claims, err := j.ParseToken(tokenString)
+		claims, err := am.j.ParseToken(tokenString)
 		if err != nil {
-			logger.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
+			am.logger.WithContext(ctx).Error("token error", zap.Any("data", map[string]interface{}{
 				"url":    ctx.Request.URL,
 				"params": ctx.Params,
 			}), zap.Error(err))
@@ -33,12 +45,12 @@ func StrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 		}
 
 		ctx.Set("claims", claims)
-		recoveryLoggerFunc(ctx, logger)
+		recoveryLoggerFunc(ctx, am.logger)
 		ctx.Next()
 	}
 }
 
-func NoStrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
+func (am *AuthMiddleware) NoStrictAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenString := ctx.Request.Header.Get("Authorization")
 		if tokenString == "" {
@@ -52,14 +64,14 @@ func NoStrictAuth(j *jwt.JWT, logger *log.Logger) gin.HandlerFunc {
 			return
 		}
 
-		claims, err := j.ParseToken(tokenString)
+		claims, err := am.j.ParseToken(tokenString)
 		if err != nil {
 			ctx.Next()
 			return
 		}
 
 		ctx.Set("claims", claims)
-		recoveryLoggerFunc(ctx, logger)
+		recoveryLoggerFunc(ctx, am.logger)
 		ctx.Next()
 	}
 }

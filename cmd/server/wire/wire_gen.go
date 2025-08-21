@@ -9,6 +9,7 @@ package wire
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/job"
+	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
@@ -26,17 +27,18 @@ import (
 // Injectors from wire.go:
 
 func NewWire(configConfig *config.Config, logger *log.Logger) (*app.App, func(), error) {
-	jwtJWT := jwt.NewJwt(configConfig)
 	handlerHandler := handler.NewHandler(logger)
 	db := repository.NewDB(configConfig, logger)
 	repositoryRepository := repository.NewRepository(logger, db)
 	transaction := repository.NewTransaction(repositoryRepository)
 	sidSid := sid.NewSid()
+	jwtJWT := jwt.NewJwt(configConfig)
 	serviceService := service.NewService(transaction, logger, sidSid, jwtJWT)
 	userRepository := repository.NewUserRepository(repositoryRepository)
 	userService := service.NewUserService(serviceService, userRepository)
 	userHandler := handler.NewUserHandler(handlerHandler, userService)
-	httpServer := server.NewHTTPServer(logger, configConfig, jwtJWT, userHandler)
+	authMiddleware := middleware.NewAuthMiddleware(jwtJWT, logger)
+	httpServer := server.NewHTTPServer(logger, configConfig, userHandler, authMiddleware)
 	jobServer := server.NewJobServer(logger)
 	schedulerScheduler := scheduler.NewScheduler(logger)
 	taskServer := server.NewTaskServer(logger, schedulerScheduler)

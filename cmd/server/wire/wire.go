@@ -6,6 +6,7 @@ package wire
 import (
 	"github.com/go-nunu/nunu-layout-advanced/internal/handler"
 	"github.com/go-nunu/nunu-layout-advanced/internal/job"
+	"github.com/go-nunu/nunu-layout-advanced/internal/middleware"
 	"github.com/go-nunu/nunu-layout-advanced/internal/repository"
 	"github.com/go-nunu/nunu-layout-advanced/internal/server"
 	"github.com/go-nunu/nunu-layout-advanced/internal/service"
@@ -77,5 +78,6 @@ func NewWire(*config.Config, *log.Logger) (*app.App, func(), error) {
 		sid.NewSid,
 		jwt.NewJwt,
 		newApp,
+		middleware.NewAuthMiddleware,
 	))
 }

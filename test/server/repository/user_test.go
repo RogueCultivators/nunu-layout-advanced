@@ -2,9 +2,10 @@ package repository
 
 import (
 	"context"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 	"testing"
 	"time"
+
+	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/go-nunu/nunu-layout-advanced/internal/model"

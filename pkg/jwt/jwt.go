@@ -2,9 +2,10 @@ package jwt
 
 import (
 	"errors"
-	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"strings"
 	"time"
+
+	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 
 	"github.com/golang-jwt/jwt/v5"
 )

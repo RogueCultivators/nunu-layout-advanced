@@ -1,13 +1,14 @@
 package middleware
 
 import (
+	"sort"
+	"strings"
+
 	"github.com/duke-git/lancet/v2/cryptor"
 	"github.com/gin-gonic/gin"
 	v1 "github.com/go-nunu/nunu-layout-advanced/api/v1"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/config"
 	"github.com/go-nunu/nunu-layout-advanced/pkg/log"
-	"sort"
-	"strings"
 )
 
 func SignMiddleware(logger *log.Logger, conf *config.Config) gin.HandlerFunc {
